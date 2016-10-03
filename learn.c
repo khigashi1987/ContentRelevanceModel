@@ -279,7 +279,6 @@ void crm_learn(document *data, document *tag, double alpha, double beta, double 
                             p_z[k] /= sum_p_z;
                         // random sampling from p_z
                         z = sampling_multinomial(r, p_z, cum_sum_p_z, nclass);
-                        // update buffers
                     }else{
                         z = nclass;
                     }
