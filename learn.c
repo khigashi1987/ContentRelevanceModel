@@ -3,6 +3,7 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <time.h>
 #include <math.h>
 #include <gsl/gsl_rng.h>
@@ -41,6 +42,7 @@ void crm_learn(document *data, document *tag, double alpha, double beta, double 
     double **temp_phi;
     double **temp_theta;
     double **temp_psi;
+    bool infinite_prob;
     int Mall, M0, M_0t;
     int z;
     int it;
@@ -221,22 +223,27 @@ void crm_learn(document *data, document *tag, double alpha, double beta, double 
                     for(k = 0;k < nclass;k++){
                         right[k] = 1.0;
                         for(j = 0;j < m_mz[m][k];j++){
-                            if(n_mz[m][k] == 0)
-                                continue;
+                            if(n_mz[m][k] == 0){
+                                infinite_prob = true;
+                                z = k;
+                                break;
+                            }
                             right[k] *= (((double)n_mz[m][k] + 1.0) / (double)n_mz[m][k]) * (((double)n_m[m] - 1.0) / (double)n_m[m]);
                         }
                     }
-                    // conditional distribution p_z
-                    sum_p_z = 0.0;
-                    for(k = 0;k < nclass;k++){
-                        p_z[k] = left[k] * center[k] * right[k];
-                        sum_p_z += p_z[k];
+                    if(infinite_prob == false){
+                        // conditional distribution p_z
+                        sum_p_z = 0.0;
+                        for(k = 0;k < nclass;k++){
+                            p_z[k] = left[k] * center[k] * right[k];
+                            sum_p_z += p_z[k];
+                        }
+                        for(k = 0;k < nclass;k++){
+                            p_z[k] /= sum_p_z; // normalize to obtain probabilities
+                        }
+                        // random sampling from p_z
+                        z = sampling_multinomial(r, p_z, cum_sum_p_z, nclass);
                     }
-                    for(k = 0;k < nclass;k++){
-                        p_z[k] /= sum_p_z; // normalize to obtain probabilities
-                    }
-                    // random sampling from p_z
-                    z = sampling_multinomial(r, p_z, cum_sum_p_z, nclass);
                     // update buffers
                     n_mz[m][z] += 1;
                     n_m[m] += 1;
