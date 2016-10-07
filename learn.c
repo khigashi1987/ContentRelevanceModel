@@ -220,6 +220,7 @@ void crm_learn(document *data, document *tag, double alpha, double beta, double 
                         center[k] /= ((double)n_z[k] + (double)nlex * beta);
                     }
                     // p_z right
+                    infinite_prob = false;
                     for(k = 0;k < nclass;k++){
                         right[k] = 1.0;
                         for(j = 0;j < m_mz[m][k];j++){
