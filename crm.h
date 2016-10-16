@@ -13,6 +13,7 @@
 #define BETA_DEFAULT 0.1
 #define GAMMA_DEFAULT 0.1
 #define ETA_DEFAULT 0.5
+#define RANDOM_SEED_DEFAULT 0
 
 void usage(void);
 

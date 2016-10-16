@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
 #include <math.h>
 #include <gsl/gsl_rng.h>
 #include "learn.h"
@@ -15,7 +14,7 @@
 #include "likelihood.h"
 #include "hyper.h"
 
-void crm_learn(document *data, document *tag, double alpha, double beta, double gamma, double eta, int nclass, int nlex, int ntlex, int dlenmax, int tlenmax, int maxiter, double **phi, double **theta, double **psi, int **n_mz, int **n_zw, int **m_mz, int **m_zt, FILE *likp, FILE *hyperp){
+void crm_learn(document *data, document *tag, double alpha, double beta, double gamma, double eta, int nclass, int nlex, int ntlex, int dlenmax, int tlenmax, int maxiter, double **phi, double **theta, double **psi, int **n_mz, int **n_zw, int **m_mz, int **m_zt, FILE *likp, FILE *hyperp, unsigned long int random_seed){
     document *dp;
     document *tp;
     int ndocs;
@@ -130,7 +129,7 @@ void crm_learn(document *data, document *tag, double alpha, double beta, double 
     
     
     // choose an arbitrary topic as first topic for word
-    gsl_rng_set(r, time(NULL));
+    gsl_rng_set(r, random_seed);
     for(dp = data, m = 0;(dp->len) != -1;dp++, m++){
         if((topics[m] = calloc((dp->len), sizeof(int *))) == NULL){
             fprintf(stderr,"crm_learn:: cannot allocate topics[m].\n");

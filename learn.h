@@ -18,6 +18,7 @@ extern void crm_learn(document *data,
         int maxiter,
         double **phi, double **theta, double **psi,
         int **n_mz, int **n_zw, int **m_mz, int **m_zt,
-        FILE *likp, FILE *hyperp);
+        FILE *likp, FILE *hyperp,
+        unsigned long int random_seed);
 
 #endif

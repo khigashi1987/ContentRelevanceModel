@@ -28,6 +28,7 @@ int main(int argc, char **argv){
     double beta = BETA_DEFAULT;
     double gamma = GAMMA_DEFAULT;
     double eta = ETA_DEFAULT;
+    unsigned long int random_seed = RANDOM_SEED_DEFAULT;
     double **phi;
     double **theta;
     double **psi;
@@ -36,7 +37,7 @@ int main(int argc, char **argv){
     int **m_mz;
     int **m_zt;
     
-    while((c = getopt(argc, argv, "I:K:A:B:G:E:h")) != -1){
+    while((c = getopt(argc, argv, "I:K:A:B:G:E:S:h")) != -1){
         switch(c){
             case 'I': maxiter = atoi(optarg); break;
             case 'K': nclass = atoi(optarg); break;
@@ -44,6 +45,7 @@ int main(int argc, char **argv){
             case 'B': beta = atof(optarg); break;
             case 'G': gamma = atof(optarg); break;
             case 'E': eta = atof(optarg); break;
+            case 'S': random_seed = atoi(optarg); break;
             case 'h': usage(); break;
             default: usage(); break;
         }
@@ -111,7 +113,7 @@ int main(int argc, char **argv){
         exit(1);
     }
     
-    crm_learn(data, tag, alpha, beta, gamma, eta, nclass, nlex, ntlex, dlenmax, tlenmax, maxiter, phi, theta, psi, n_mz, n_zw, m_mz, m_zt, likp, hyperp);
+    crm_learn(data, tag, alpha, beta, gamma, eta, nclass, nlex, ntlex, dlenmax, tlenmax, maxiter, phi, theta, psi, n_mz, n_zw, m_mz, m_zt, likp, hyperp, random_seed);
     crm_write(pp, tp, sp, n_mzp, n_wzp, m_mzp, m_tzp, phi, theta, psi, n_mz, n_zw, m_mz, m_zt, nclass, nlex, ntlex, ndoc);
     
     free_feature_matrix(data);
@@ -136,6 +138,6 @@ int main(int argc, char **argv){
 }
 
 void usage(void){
-    printf("usage: %s [-I maxiter] [-K n_classes] [-A alpha] [-B beta] [-G gamma] [-E eta] doc tag model\n", "crm");
+    printf("usage: %s [-I maxiter] [-K n_classes] [-A alpha] [-B beta] [-G gamma] [-E eta] [-S random_seed] doc tag model\n", "crm");
     exit(0);
 }
